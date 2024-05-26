@@ -13,6 +13,7 @@
 		0B108A692C03247800170AA0 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B108A602C03247800170AA0 /* ViewController.swift */; };
 		0B108A6A2C03247800170AA0 /* MainViewCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B108A612C03247800170AA0 /* MainViewCollectionViewCell.swift */; };
 		0B108A6B2C03247800170AA0 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 0B108A672C03247800170AA0 /* Assets.xcassets */; };
+		0B108A6D2C03262C00170AA0 /* SearchViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B108A6C2C03262C00170AA0 /* SearchViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -24,6 +25,7 @@
 		0B108A602C03247800170AA0 /* ViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
 		0B108A612C03247800170AA0 /* MainViewCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MainViewCollectionViewCell.swift; sourceTree = "<group>"; };
 		0B108A672C03247800170AA0 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		0B108A6C2C03262C00170AA0 /* SearchViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -91,6 +93,7 @@
 			children = (
 				0B108A602C03247800170AA0 /* ViewController.swift */,
 				0B108A612C03247800170AA0 /* MainViewCollectionViewCell.swift */,
+				0B108A6C2C03262C00170AA0 /* SearchViewController.swift */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -201,6 +204,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0B108A6D2C03262C00170AA0 /* SearchViewController.swift in Sources */,
 				0B108A6A2C03247800170AA0 /* MainViewCollectionViewCell.swift in Sources */,
 				0B108A692C03247800170AA0 /* ViewController.swift in Sources */,
 				0B108A482C03246000170AA0 /* AppDelegate.swift in Sources */,

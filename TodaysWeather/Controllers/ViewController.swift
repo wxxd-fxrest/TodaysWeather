@@ -34,13 +34,19 @@ class ViewController: UIViewController {
         return label
     }()
     
-    private let SearchImage: UIImageView = {
+    private let searchImage: UIImageView = {
         let weatherImg = UIImageView()
         if let image = UIImage(named: "searchImage")?.withRenderingMode(.alwaysTemplate) {
             weatherImg.image = image
         } // svg color change
         weatherImg.tintColor = UIColor(named: "TextColor")
         return weatherImg
+    }()
+    
+    private lazy var goSearchButton: UIButton = {
+        let button = UIButton()
+        button.addTarget(self, action: #selector(goBeforeSearchPageTapped), for: .touchUpInside)
+        return button
     }()
     
     // MARK: - Weather View
@@ -133,7 +139,7 @@ class ViewController: UIViewController {
          weekCollectionView.dataSource = self
          weekCollectionView.delegate = self
          weekCollectionView.register(MainViewCollectionViewCell.self, forCellWithReuseIdentifier: "WeekCell")
-         weekCollectionView.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
+         weekCollectionView.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 20)
      }
     
     // MARK: - Life Cycle
@@ -146,18 +152,34 @@ class ViewController: UIViewController {
         designWindSpeedUI()
         designWeekCollectionUI()
     }
+    
+    override func viewWillAppear(_ animated: Bool) {
+      navigationController?.isNavigationBarHidden = true // 뷰 컨트롤러가 나타날 때 숨기기
+    }
+
+    // MARK: - weekCollectionView Reload Data
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        configureView()
+    }
+
+    private func configureView() {
+        weekCollectionView.reloadData()
+    }
 
     // MARK: - designHeaderUI()
     private func designHeaderUI() {
         view.addSubview(titleView)
         titleView.addSubview(locationTitleLabel)
         titleView.addSubview(timeTitleLabel)
-        titleView.addSubview(SearchImage)
+        titleView.addSubview(goSearchButton)
+        goSearchButton.addSubview(searchImage)
 
         titleView.translatesAutoresizingMaskIntoConstraints = false
         locationTitleLabel.translatesAutoresizingMaskIntoConstraints = false
         timeTitleLabel.translatesAutoresizingMaskIntoConstraints = false
-        SearchImage.translatesAutoresizingMaskIntoConstraints = false
+        searchImage.translatesAutoresizingMaskIntoConstraints = false
+        goSearchButton.translatesAutoresizingMaskIntoConstraints = false
 
         NSLayoutConstraint.activate([
             titleView.topAnchor.constraint(equalTo: view.topAnchor, constant: 90),
@@ -171,10 +193,15 @@ class ViewController: UIViewController {
             timeTitleLabel.topAnchor.constraint(equalTo: locationTitleLabel.bottomAnchor, constant: 0),
             timeTitleLabel.centerXAnchor.constraint(equalTo: titleView.centerXAnchor),
             
-            SearchImage.centerYAnchor.constraint(equalTo: titleView.centerYAnchor, constant: -6),
-            SearchImage.trailingAnchor.constraint(equalTo: titleView.trailingAnchor, constant: -20),
-            SearchImage.widthAnchor.constraint(equalToConstant: 30),
-            SearchImage.heightAnchor.constraint(equalToConstant: 30),
+            goSearchButton.centerYAnchor.constraint(equalTo: titleView.centerYAnchor, constant: -6),
+            goSearchButton.trailingAnchor.constraint(equalTo: titleView.trailingAnchor, constant: -16),
+            goSearchButton.widthAnchor.constraint(equalToConstant: 36),
+            goSearchButton.heightAnchor.constraint(equalToConstant: 36),
+            
+            searchImage.centerXAnchor.constraint(equalTo: goSearchButton.centerXAnchor),
+            searchImage.centerYAnchor.constraint(equalTo: goSearchButton.centerYAnchor),
+            searchImage.widthAnchor.constraint(equalToConstant: 30),
+            searchImage.heightAnchor.constraint(equalToConstant: 30),
         ])
     }
     
@@ -244,8 +271,9 @@ class ViewController: UIViewController {
         weekTitle.translatesAutoresizingMaskIntoConstraints = false
         
         NSLayoutConstraint.activate([
-            weekCollectionView.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -80),
-            weekCollectionView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            weekCollectionView.topAnchor.constraint(equalTo: windSpeedStackView.bottomAnchor, constant: 100),
+            weekCollectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
+            weekCollectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             weekCollectionView.widthAnchor.constraint(equalToConstant: weekCollectionViewWidth),
             weekCollectionView.heightAnchor.constraint(equalToConstant: weekCollectionViewHeight),
             
@@ -254,17 +282,14 @@ class ViewController: UIViewController {
         ])
     }
     
-    // MARK: - weekCollectionView Reload Data
-    override func viewDidLayoutSubviews() {
-        super.viewDidLayoutSubviews()
-        configureView()
-    }
-
-    private func configureView() {
-        weekCollectionView.reloadData()
+    @objc func goBeforeSearchPageTapped() {
+        print("click")
+        let beforeSearchVC = BeforeSearchViewController()
+        navigationController?.pushViewController(beforeSearchVC, animated: true)
     }
 }
 
+// MARK: - UICollectionViewDataSource and UICollectionViewDelegateFlowLayout methods
 extension ViewController: UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return 7

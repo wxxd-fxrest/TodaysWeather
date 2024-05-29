@@ -151,6 +151,21 @@ class ViewController: UIViewController {
         designWeatherUI()
         designWindSpeedUI()
         designWeekCollectionUI()
+        
+        guard let path = Bundle.main.path(forResource: "APIManager", ofType: "plist") else {
+            fatalError("APIManager.plist not found")
+        }
+
+        guard let apiKeyDict = NSDictionary(contentsOfFile: path) as? [String: String],
+              let apiKey = apiKeyDict["API_KEY"] else {
+            fatalError("API key not found in APIManager.plist")
+        }
+
+        let viewModel = WeatherViewModel(apiKey: apiKey)
+                
+        viewModel.fetchWeather(lat: 37.5666791, lon: 126.9782914) { [weak self] in
+            self?.weekCollectionView.reloadData()
+        }
     }
     
     override func viewWillAppear(_ animated: Bool) {

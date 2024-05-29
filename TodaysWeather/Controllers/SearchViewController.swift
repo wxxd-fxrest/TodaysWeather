@@ -8,7 +8,7 @@
 import UIKit
 
 class SearchViewController: UIViewController {
-    
+
     // MARK: - Search View
     private let searchView: UIView = {
         let view = UIView()
@@ -94,6 +94,20 @@ class SearchViewController: UIViewController {
 
         designSearchViewUI()
         designSearchResultTableViewUI()
+        
+        guard let path = Bundle.main.path(forResource: "APIManager", ofType: "plist") else {
+            fatalError("APIManager.plist not found")
+        }
+
+        guard let apiKeyDict = NSDictionary(contentsOfFile: path) as? [String: String],
+              let apiKey = apiKeyDict["API_KEY"] else {
+            fatalError("API key not found in APIManager.plist")
+        }
+
+        let viewModel = GeoViewModel(apiKey: apiKey)
+                
+        viewModel.fetchWeather(searchText: "Seoul") { [weak self] in
+        }
     }
     
     // MARK: - viewWillAppear()
@@ -101,7 +115,7 @@ class SearchViewController: UIViewController {
         super.viewWillAppear(animated)
         navigationController?.isNavigationBarHidden = true // 뷰 컨트롤러가 나타날 때 숨기기
     }
-    
+ 
     // MARK: - designSearchViewUI()
     private func designSearchViewUI() {
         view.addSubview(searchView)

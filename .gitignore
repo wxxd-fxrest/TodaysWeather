@@ -119,6 +119,7 @@ fastlane/test_output
 iOSInjectionProject/
 
 Info.plist
+APIManager.plist
 
 ### Xcode ###
 

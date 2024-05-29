@@ -5,10 +5,14 @@
 //  Created by 밀가루 on 5/26/24.
 //
 
+
 import UIKit
 
 class BeforeSearchViewController: UIViewController {
     
+    // MARK: - Properties
+    var isHiddenValue = false
+
     // MARK: - Search View
     private let searchView: UIView = {
         let view = UIView()
@@ -143,9 +147,6 @@ class BeforeSearchViewController: UIViewController {
         designSearchViewUI()
         designTabBarUI()
         designWeatherTableUI()
-        
-        tabSwipe()
-        // 현재 셀의 삭제, 북마크 스와이프 때문에 탭 스와이프가 안 됨, 수정해야 함
     }
     
     // MARK: - viewWillAppear()
@@ -288,41 +289,21 @@ class BeforeSearchViewController: UIViewController {
         let searchVC = SearchViewController()
         navigationController?.pushViewController(searchVC, animated: true)
     }
-    
+        
     @objc func localTabTapped() {
         print("local tab")
+        isHiddenValue = false
+        weatherTableView.reloadData()
         toggleView(basicLocalViewBar, show: true)
         toggleView(markedLocalViewBar, show: false)
     }
     
     @objc func markTabTapped() {
         print("mark tab")
+        isHiddenValue = true
+        weatherTableView.reloadData()
         toggleView(basicLocalViewBar, show: false)
         toggleView(markedLocalViewBar, show: true)
-    }
-    
-    @objc private func handleSwipe(_ gesture: UISwipeGestureRecognizer) {
-        switch gesture.direction {
-        case .left:
-            print("Swiped left")
-            markTabTapped()
-        case .right:
-            print("Swiped right")
-            localTabTapped()
-        default:
-            break
-        }
-    }
-    
-    // MARK: - Swipe Gesture
-    private func tabSwipe() {
-        let swipeLeft = UISwipeGestureRecognizer(target: self, action: #selector(handleSwipe(_:)))
-        swipeLeft.direction = .left
-        view.addGestureRecognizer(swipeLeft)
-        
-        let swipeRight = UISwipeGestureRecognizer(target: self, action: #selector(handleSwipe(_:)))
-        swipeRight.direction = .right
-        view.addGestureRecognizer(swipeRight)
     }
     
     private func toggleView(_ view: UIView, show: Bool) {
@@ -391,15 +372,21 @@ extension BeforeSearchViewController: UITableViewDataSource, UITableViewDelegate
     
     // 오른쪽에서 왼쪽으로 스와이프 (Delete)
     func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
+        var actions = [UIContextualAction]()
+        
         // 삭제 액션
         let deleteAction = UIContextualAction(style: .destructive, title: "Delete") { (action, view, completionHandler) in
-            // 삭제 액션 수행
             print("Delete tapped")
             completionHandler(true)
         }
         deleteAction.backgroundColor = UIColor.systemRed
+        actions.append(deleteAction)
         
-        let configuration = UISwipeActionsConfiguration(actions: [deleteAction])
+        if !isHiddenValue {
+            return nil
+        }
+        
+        let configuration = UISwipeActionsConfiguration(actions: actions)
         configuration.performsFirstActionWithFullSwipe = false
         return configuration
     }
